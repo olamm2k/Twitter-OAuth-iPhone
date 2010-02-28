@@ -21,14 +21,14 @@
 @interface SA_OAuthTwitterEngine (private)
 
 - (void) requestURL:(NSURL *) url token:(OAToken *)token onSuccess:(SEL)success onFail:(SEL)fail;
-- (void) outhTicketFailed: (OAServiceTicket *) ticket data: (NSData *) data;
+- (void) oauthTicketFailed: (OAServiceTicket *) ticket data: (NSData *) data;
 
 - (void) setRequestToken: (OAServiceTicket *) ticket withData: (NSData *) data;
 - (void) setAccessToken: (OAServiceTicket *) ticket withData: (NSData *) data;
 
 - (NSString *) extractUsernameFromHTTPBody:(NSString *)body;
 
-// MGTwitterEngine impliments this
+// MGTwitterEngine implements this
 // include it here just so that we
 // can use this private method
 - (NSString *)_queryStringWithBase:(NSString *)base parameters:(NSDictionary *)params prefixed:(BOOL)prefixed;
@@ -47,8 +47,7 @@
 	self.authorizeURL = nil;
 	self.requestTokenURL = nil;
 	self.accessTokenURL = nil;
-	
-	[_accessToken release];
+  [_accessToken release];
 	[_requestToken release];
 	[_consumer release];
 	[super dealloc];
@@ -72,13 +71,15 @@
 //=============================================================================================================================
 #pragma mark OAuth Code
 - (BOOL) OAuthSetup {
-	return _consumer != nil;
+  return _consumer != nil;
 }
+
 - (OAConsumer *) consumer {
 	if (_consumer) return _consumer;
 	
 	NSAssert(self.consumerKey.length > 0 && self.consumerSecret.length > 0, @"You must first set your Consumer Key and Consumer Secret properties. Visit http://twitter.com/oauth_clients/new to obtain these.");
 	_consumer = [[OAConsumer alloc] initWithKey: self.consumerKey secret: self.consumerSecret];
+	
 	return _consumer;
 }
 
@@ -114,12 +115,12 @@
 
 //A request token is used to eventually generate an access token
 - (void) requestRequestToken {
-	[self requestURL: self.requestTokenURL token: nil onSuccess: @selector(setRequestToken:withData:) onFail: @selector(outhTicketFailed:data:)];
+	[self requestURL: self.requestTokenURL token: nil onSuccess: @selector(setRequestToken:withData:) onFail: @selector(oauthTicketFailed:data:)];
 }
 
 //this is what we eventually want
 - (void) requestAccessToken {
-	[self requestURL: self.accessTokenURL token: _requestToken onSuccess: @selector(setAccessToken:withData:) onFail: @selector(outhTicketFailed:data:)];
+	[self requestURL: self.accessTokenURL token: _requestToken onSuccess: @selector(setAccessToken:withData:) onFail: @selector(oauthTicketFailed:data:)];
 }
 
 
@@ -127,32 +128,35 @@
 	if ([_delegate respondsToSelector: @selector(storeCachedTwitterOAuthData:forUsername:)]) [(id) _delegate storeCachedTwitterOAuthData: @"" forUsername: self.username];
 	[_accessToken release];
 	_accessToken = nil;
-	[_consumer release];
-	_consumer = nil;
-	self.pin = nil;
-	[_requestToken release];
-	_requestToken = nil;
+  [_consumer release];
+  _consumer = nil;
+  self.pin = nil;
+  [_requestToken release];
+  _requestToken = nil;
 }
 
 - (void) setPin: (NSString *) pin {
 	[_pin autorelease];
-	_pin = [pin retain];
+	_pin = [pin copy];
 	
-	_accessToken.pin = pin;
-	_requestToken.pin = pin;
+  _accessToken.pin = pin;
+  _requestToken.pin = pin;
 }
 
 //=============================================================================================================================
 #pragma mark Private OAuth methods
 - (void) requestURL: (NSURL *) url token: (OAToken *) token onSuccess: (SEL) success onFail: (SEL) fail {
-    OAMutableURLRequest				*request = [[[OAMutableURLRequest alloc] initWithURL: url consumer: self.consumer token:token realm:nil signatureProvider: nil] autorelease];
-	if (!request) return;
+  OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL: url consumer: self.consumer token:token realm:nil signatureProvider: nil] autorelease];
+	if (request == nil) return;
 	
-	if (self.pin.length) token.pin = self.pin;
-    [request setHTTPMethod: @"POST"];
-	
-    OADataFetcher				*fetcher = [[[OADataFetcher alloc] init] autorelease];	
-    [fetcher fetchDataWithRequest: request delegate: self didFinishSelector: success didFailSelector: fail];
+	if (self.pin.length == 7) {
+    token.pin = self.pin;
+  }
+  
+  [request setHTTPMethod: @"POST"];
+
+  OADataFetcher *fetcher = [[[OADataFetcher alloc] init] autorelease];	
+  [fetcher fetchDataWithRequest: request delegate: self didFinishSelector: success didFailSelector: fail];
 }
 
 
@@ -160,7 +164,7 @@
 // if the fetch fails this is what will happen
 // you'll want to add your own error handling here.
 //
-- (void) outhTicketFailed: (OAServiceTicket *) ticket data: (NSData *) data {
+- (void) oauthTicketFailed: (OAServiceTicket *) ticket data: (NSData *) data {
 	if ([_delegate respondsToSelector: @selector(twitterOAuthConnectionFailedWithData:)]) [(id) _delegate twitterOAuthConnectionFailedWithData: data];
 }
 
@@ -180,7 +184,7 @@
 	[_requestToken release];
 	_requestToken = [[OAToken alloc] initWithHTTPResponseBody:dataString];
 	
-	if (self.pin.length) _requestToken.pin = self.pin;
+	if (self.pin.length == 7) _requestToken.pin = self.pin;
 }
 
 
@@ -195,7 +199,7 @@
 	NSString *dataString = [[[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding] autorelease];
 	if (!dataString) return;
 
-	if (self.pin.length && [dataString rangeOfString: @"oauth_verifier"].location == NSNotFound) dataString = [dataString stringByAppendingFormat: @"&oauth_verifier=%@", self.pin];
+	if (self.pin.length == 7 && [dataString rangeOfString: @"oauth_verifier"].location == NSNotFound) dataString = [dataString stringByAppendingFormat: @"&oauth_verifier=%@", self.pin];
 	
 	NSString				*username = [self extractUsernameFromHTTPBody:dataString];
 
@@ -235,14 +239,14 @@
 
 // --------------------------------------------------------------------------------
 //
-// these method overrides were created from the work that Chris Kimpton
-// did.  i've chosen to subclass instead of directly modifying the
+// These method overrides were created from the work that Chris Kimpton
+// did.  I've chosen to subclass instead of directly modifying the
 // MGTwitterEngine as it makes integrating MGTwitterEngine changes a bit
 // easier.
 // 
-// the code here is largely unchanged from chris's implimentation.
-// i've tried to highlight the areas that differ from 
-// the base class implimentation.
+// The code here is largely unchanged from Chris's implementation.
+// I've tried to highlight the areas that differ from 
+// the base class implementation.
 //
 // --------------------------------------------------------------------------------
 
@@ -347,7 +351,7 @@
 {
 	
 	// --------------------------------------------------------------------------------
-	// modificaiton from the base clase
+	// modification from the base class
 	// instead of answering the authentication challenge, we just ignore it.
 	// seems a bit odd to me, but this is what Chris Kimpton did and it seems to work,
 	// so i'm rolling with it.

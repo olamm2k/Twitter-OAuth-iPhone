@@ -8,22 +8,22 @@
 
 /*
  This file conditionally includes the correct headers for either Mac OS X or iPhone deployment.
-*/
+ */
 
 #if TARGET_OS_IPHONE
-	#import <Foundation/Foundation.h>
-	#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #else
-	#import <Cocoa/Cocoa.h>
+#import <Cocoa/Cocoa.h>
 #endif
 
 /*
  Set YAJL_AVAILABLE to 1 if the YAJL JSON parser is available and you'd like MGTwitterEngine to use it.
  
  More information about this parser here:
-
+ 
  http://lloydforge.org/projects/yajl/
-
+ 
  There are some speed advantages to using JSON instead of XML. Also, the Twitter Search API
  uses JSON, so adding this library to your project makes additional methods available to your
  application.
@@ -46,6 +46,6 @@
  If you want to use YAJL, change the following definition and make sure that the
  MGTwitterEngine*YAJLParser.m files are added to the Compile Sources phase of the MGTwitterEngine
  target.
-*/
+ */
 
 #define YAJL_AVAILABLE 0

@@ -12,19 +12,19 @@
 #import "MGTwitterParserDelegate.h"
 
 @interface MGTwitterEngine : NSObject <MGTwitterParserDelegate> {
-    __weak NSObject <MGTwitterEngineDelegate> *_delegate;
-    NSString *_username;
-    NSString *_password;
-    NSMutableDictionary *_connections;   // MGTwitterHTTPURLConnection objects
-    NSString *_clientName;
-    NSString *_clientVersion;
-    NSString *_clientURL;
-    NSString *_clientSourceToken;
+  __weak NSObject <MGTwitterEngineDelegate> *_delegate;
+  NSString *_username;
+  NSString *_password;
+  NSMutableDictionary *_connections;   // MGTwitterHTTPURLConnection objects
+  NSString *_clientName;
+  NSString *_clientVersion;
+  NSString *_clientURL;
+  NSString *_clientSourceToken;
 	NSString *_APIDomain;
 #if YAJL_AVAILABLE
 	NSString *_searchDomain;
 #endif
-    BOOL _secureConnection;
+  BOOL _secureConnection;
 	BOOL _clearsCookies;
 #if YAJL_AVAILABLE
 	MGTwitterEngineDeliveryOptions _deliveryOptions;

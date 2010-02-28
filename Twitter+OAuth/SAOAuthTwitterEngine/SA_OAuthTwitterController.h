@@ -21,8 +21,8 @@
 @end
 
 
-@interface SA_OAuthTwitterController : UIViewController <UIWebViewDelegate> {
-
+@interface SA_OAuthTwitterController : UIViewController <UIWebViewDelegate, UITextFieldDelegate> {
+  
 	SA_OAuthTwitterEngine						*_engine;
 	UIWebView									*_webView;
 	UINavigationBar								*_navBar;
@@ -30,10 +30,12 @@
 	
 	id <SA_OAuthTwitterControllerDelegate>		_delegate;
 	UIView										*_blockerView;
-
+  
 	UIInterfaceOrientation                      _orientation;
 	BOOL										_loading, _firstLoad;
 	UIToolbar									*_pinCopyPromptBar;
+  
+  CGFloat animatedDistance;
 }
 
 

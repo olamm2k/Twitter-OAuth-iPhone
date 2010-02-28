@@ -19,24 +19,24 @@
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate 
           requestType:(MGTwitterRequestType)requestType responseType:(MGTwitterResponseType)responseType
 {
-    if (self = [super initWithRequest:request delegate:delegate]) {
-        _data = [[NSMutableData alloc] initWithCapacity:0];
-        _identifier = [[NSString stringWithNewUUID] retain];
-        _requestType = requestType;
-        _responseType = responseType;
+  if (self = [super initWithRequest:request delegate:delegate]) {
+    _data = [[NSMutableData alloc] initWithCapacity:0];
+    _identifier = [[NSString stringWithNewUUID] retain];
+    _requestType = requestType;
+    _responseType = responseType;
 		_URL = [[request URL] retain];
-    }
-    
-    return self;
+  }
+  
+  return self;
 }
 
 
 - (void)dealloc
 {
-    [_data release];
-    [_identifier release];
+  [_data release];
+  [_identifier release];
 	[_URL release];
-    [super dealloc];
+  [super dealloc];
 }
 
 
@@ -45,13 +45,13 @@
 
 - (void)resetDataLength
 {
-    [_data setLength:0];
+  [_data setLength:0];
 }
 
 
 - (void)appendData:(NSData *)data
 {
-    [_data appendData:data];
+  [_data appendData:data];
 }
 
 
@@ -60,39 +60,39 @@
 
 - (NSString *)identifier
 {
-    return [[_identifier retain] autorelease];
+  return [[_identifier retain] autorelease];
 }
 
 
 - (NSData *)data
 {
-    return [[_data retain] autorelease];
+  return [[_data retain] autorelease];
 }
 
 
 - (NSURL *)URL
 {
-    return [[_URL retain] autorelease];
+  return [[_URL retain] autorelease];
 }
 
 
 - (MGTwitterRequestType)requestType
 {
-    return _requestType;
+  return _requestType;
 }
 
 
 - (MGTwitterResponseType)responseType
 {
-    return _responseType;
+  return _responseType;
 }
 
 
 - (NSString *)description
 {
-    NSString *description = [super description];
-    
-    return [description stringByAppendingFormat:@" (requestType = %d, identifier = %@)", _requestType, _identifier];
+  NSString *description = [super description];
+  
+  return [description stringByAppendingFormat:@" (requestType = %d, identifier = %@)", _requestType, _identifier];
 }
 
 

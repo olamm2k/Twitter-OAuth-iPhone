@@ -22,7 +22,7 @@
 
 #if YAJL_AVAILABLE
 - (void)parsedObject:(NSDictionary *)parsedObject forRequest:(NSString *)identifier 
-                    ofResponseType:(MGTwitterResponseType)responseType;
+      ofResponseType:(MGTwitterResponseType)responseType;
 #endif
 
 @end

@@ -19,12 +19,12 @@
 connectionIdentifier:(NSString *)identifier requestType:(MGTwitterRequestType)reqType 
        responseType:(MGTwitterResponseType)respType
 {
-    id parser = [[self alloc] initWithXML:theXML 
-                                 delegate:theDelegate 
-                     connectionIdentifier:identifier 
-                              requestType:reqType
-                             responseType:respType];
-    return [parser autorelease];
+  id parser = [[self alloc] initWithXML:theXML 
+                               delegate:theDelegate 
+                   connectionIdentifier:identifier 
+                            requestType:reqType
+                           responseType:respType];
+  return [parser autorelease];
 }
 
 
@@ -32,37 +32,37 @@ connectionIdentifier:(NSString *)identifier requestType:(MGTwitterRequestType)re
 connectionIdentifier:(NSString *)theIdentifier requestType:(MGTwitterRequestType)reqType 
      responseType:(MGTwitterResponseType)respType
 {
-    if (self = [super init]) {
-        xml = [theXML retain];
-        identifier = [theIdentifier retain];
-        requestType = reqType;
-        responseType = respType;
-        delegate = theDelegate;
-        parsedObjects = [[NSMutableArray alloc] initWithCapacity:0];
-        
-        // Set up the parser object.
-        parser = [[NSXMLParser alloc] initWithData:xml];
-        [parser setDelegate:self];
-        [parser setShouldReportNamespacePrefixes:NO];
-        [parser setShouldProcessNamespaces:NO];
-        [parser setShouldResolveExternalEntities:NO];
-        
-        // Begin parsing.
-        [parser parse];
-    }
+  if (self = [super init]) {
+    xml = [theXML retain];
+    identifier = [theIdentifier retain];
+    requestType = reqType;
+    responseType = respType;
+    delegate = theDelegate;
+    parsedObjects = [[NSMutableArray alloc] initWithCapacity:0];
     
-    return self;
+    // Set up the parser object.
+    parser = [[NSXMLParser alloc] initWithData:xml];
+    [parser setDelegate:self];
+    [parser setShouldReportNamespacePrefixes:NO];
+    [parser setShouldProcessNamespaces:NO];
+    [parser setShouldResolveExternalEntities:NO];
+    
+    // Begin parsing.
+    [parser parse];
+  }
+  
+  return self;
 }
 
 
 - (void)dealloc
 {
-    [parser release];
-    [parsedObjects release];
-    [xml release];
-    [identifier release];
-    delegate = nil;
-    [super dealloc];
+  [parser release];
+  [parsedObjects release];
+  [xml release];
+  [identifier release];
+  delegate = nil;
+  [super dealloc];
 }
 
 
@@ -71,15 +71,15 @@ connectionIdentifier:(NSString *)theIdentifier requestType:(MGTwitterRequestType
 
 - (void)parserDidStartDocument:(NSXMLParser *)theParser
 {
-    //NSLog(@"Parsing begun");
+  //NSLog(@"Parsing begun");
 }
 
 
 - (void)parserDidEndDocument:(NSXMLParser *)theParser
 {
-    //NSLog(@"Parsing complete: %@", parsedObjects);
-    [delegate parsingSucceededForRequest:identifier ofResponseType:responseType 
-                       withParsedObjects:parsedObjects];
+  //NSLog(@"Parsing complete: %@", parsedObjects);
+  [delegate parsingSucceededForRequest:identifier ofResponseType:responseType 
+                     withParsedObjects:parsedObjects];
 }
 
 
@@ -87,58 +87,58 @@ connectionIdentifier:(NSString *)theIdentifier requestType:(MGTwitterRequestType
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName 
     attributes:(NSDictionary *)attributeDict
 {
-    //NSLog(@"Started element: %@ (%@)", elementName, attributeDict);
+  //NSLog(@"Started element: %@ (%@)", elementName, attributeDict);
 }
 
 
 - (void)parser:(NSXMLParser *)theParser foundCharacters:(NSString *)characters
 {
-    //NSLog(@"Found characters: %@", characters);
+  //NSLog(@"Found characters: %@", characters);
 }
 
 
 - (void)parser:(NSXMLParser *)theParser didEndElement:(NSString *)elementName 
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
-    //NSLog(@"Ended element: %@", elementName);
-    [self setLastOpenedElement:nil];
-    
-    if ([elementName isEqualToString:@"protected"] 
-        || [elementName isEqualToString:@"truncated"] 
-        || [elementName isEqualToString:@"following"]) {
-        // Change "true"/"false" into an NSNumber with a BOOL value.
-        NSNumber *boolNumber = [NSNumber numberWithBool:[[currentNode objectForKey:elementName] isEqualToString:@"true"]];
-        [currentNode setObject:boolNumber forKey:elementName];
-    } else if ([elementName isEqualToString:@"created_at"]) {
-        // Change date-string into an NSDate.
-		#if !TARGET_OS_IPHONE
-			NSDate *creationDate = [NSDate dateWithNaturalLanguageString:[currentNode objectForKey:elementName]];
-			if (creationDate) {
-				[currentNode setObject:creationDate forKey:elementName];
-			}
-		#endif
+  //NSLog(@"Ended element: %@", elementName);
+  [self setLastOpenedElement:nil];
+  
+  if ([elementName isEqualToString:@"protected"] 
+      || [elementName isEqualToString:@"truncated"] 
+      || [elementName isEqualToString:@"following"]) {
+    // Change "true"/"false" into an NSNumber with a BOOL value.
+    NSNumber *boolNumber = [NSNumber numberWithBool:[[currentNode objectForKey:elementName] isEqualToString:@"true"]];
+    [currentNode setObject:boolNumber forKey:elementName];
+  } else if ([elementName isEqualToString:@"created_at"]) {
+    // Change date-string into an NSDate.
+#if !TARGET_OS_IPHONE
+    NSDate *creationDate = [NSDate dateWithNaturalLanguageString:[currentNode objectForKey:elementName]];
+    if (creationDate) {
+      [currentNode setObject:creationDate forKey:elementName];
     }
+#endif
+  }
 }
 
 
 - (void)parser:(NSXMLParser *)theParser foundAttributeDeclarationWithName:(NSString *)attributeName 
     forElement:(NSString *)elementName type:(NSString *)type defaultValue:(NSString *)defaultValue
 {
-    //NSLog(@"Found attribute: %@ (%@) [%@] {%@}", attributeName, elementName, type, defaultValue);
+  //NSLog(@"Found attribute: %@ (%@) [%@] {%@}", attributeName, elementName, type, defaultValue);
 }
 
 
 - (void)parser:(NSXMLParser *)theParser foundIgnorableWhitespace:(NSString *)whitespaceString
 {
-    //NSLog(@"Found ignorable whitespace: %@", whitespaceString);
+  //NSLog(@"Found ignorable whitespace: %@", whitespaceString);
 }
 
 
 - (void)parser:(NSXMLParser *)theParser parseErrorOccurred:(NSError *)parseError
 {
-    //NSLog(@"Parsing error occurred: %@", parseError);
-    [delegate parsingFailedForRequest:identifier ofResponseType:responseType 
-                            withError:parseError];
+  //NSLog(@"Parsing error occurred: %@", parseError);
+  [delegate parsingFailedForRequest:identifier ofResponseType:responseType 
+                          withError:parseError];
 }
 
 
@@ -146,15 +146,15 @@ connectionIdentifier:(NSString *)theIdentifier requestType:(MGTwitterRequestType
 
 
 - (NSString *)lastOpenedElement {
-    return [[lastOpenedElement retain] autorelease];
+  return [[lastOpenedElement retain] autorelease];
 }
 
 
 - (void)setLastOpenedElement:(NSString *)value {
-    if (lastOpenedElement != value) {
-        [lastOpenedElement release];
-        lastOpenedElement = [value copy];
-    }
+  if (lastOpenedElement != value) {
+    [lastOpenedElement release];
+    lastOpenedElement = [value copy];
+  }
 }
 
 
@@ -163,10 +163,10 @@ connectionIdentifier:(NSString *)theIdentifier requestType:(MGTwitterRequestType
 
 - (void)addSource
 {
-    if (![currentNode objectForKey:TWITTER_SOURCE_REQUEST_TYPE]) {
-        [currentNode setObject:[NSNumber numberWithInt:requestType] 
-                        forKey:TWITTER_SOURCE_REQUEST_TYPE];
-    }
+  if (![currentNode objectForKey:TWITTER_SOURCE_REQUEST_TYPE]) {
+    [currentNode setObject:[NSNumber numberWithInt:requestType] 
+                    forKey:TWITTER_SOURCE_REQUEST_TYPE];
+  }
 }
 
 

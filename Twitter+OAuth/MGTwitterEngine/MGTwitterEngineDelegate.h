@@ -11,10 +11,10 @@
 
 typedef enum _MGTwitterEngineDeliveryOptions {
 	// all results will be delivered as an array via statusesReceived: and similar delegate methods
-    MGTwitterEngineDeliveryAllResultsOption = 1 << 0,
-
+  MGTwitterEngineDeliveryAllResultsOption = 1 << 0,
+  
 	// individual results will be delivered as a dictionary via the receivedObject: delegate method
-    MGTwitterEngineDeliveryIndividualResultsOption = 1 << 1,
+  MGTwitterEngineDeliveryIndividualResultsOption = 1 << 1,
 	
 	// these options can be combined with the | operator
 } MGTwitterEngineDeliveryOptions;
@@ -24,8 +24,9 @@ typedef enum _MGTwitterEngineDeliveryOptions {
 @protocol MGTwitterEngineDelegate
 
 // These delegate methods are called after a connection has been established
-- (void)requestSucceeded:(NSString *)connectionIdentifier;
-- (void)requestFailed:(NSString *)connectionIdentifier withError:(NSError *)error;
+// <OL> renamed to -twitterRequestSucceeded: to avoid confusion with the ASIHTTPRequest delegate methods
+- (void)twitterRequestSucceeded:(NSString *)connectionIdentifier;
+- (void)twitterRequestFailed:(NSString *)connectionIdentifier withError:(NSError *)error;
 
 @optional
 

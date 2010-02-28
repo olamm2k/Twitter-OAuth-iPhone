@@ -16,14 +16,14 @@ typedef enum _MGTwitterRequestType {
 	MGTwitterUpdateGetRequest, // get a status update for the specified id
 	MGTwitterUpdateSendRequest, // send a new update for the current user
 	MGTwitterUpdateDeleteRequest, // delete an update for the current user using the specified id
-    MGTwitterRepliesRequest, // latest reply status for the current user
-    MGTwitterFeaturedUsersRequest, // latest status from featured users
+  MGTwitterRepliesRequest, // latest reply status for the current user
+  MGTwitterFeaturedUsersRequest, // latest status from featured users
 	MGTwitterFriendUpdatesRequest, // last status for the people that the current user follows
 	MGTwitterFriendUpdatesForUserRequest, // last status for the people that the specified user follows
 	MGTwitterFollowerUpdatesRequest, // last status for the people that follow the current user
 	MGTwitterUserInformationRequest, // user information using the specified id or email
-    MGTwitterDirectMessagesRequest, // latest direct messages to the current user
-    MGTwitterDirectMessagesSentRequest, // latest direct messages from the current user
+  MGTwitterDirectMessagesRequest, // latest direct messages to the current user
+  MGTwitterDirectMessagesSentRequest, // latest direct messages from the current user
 	MGTwitterDirectMessageSendRequest, // send a new direct message from the current user
 	MGTwitterDirectMessageDeleteRequest, // delete a direct message to/from the current user
 	MGTwitterUpdatesEnableRequest, // enable status updates for specified user (e.g. follow)
@@ -41,7 +41,7 @@ typedef enum _MGTwitterRequestType {
 	MGTwitterNotificationsDisableRequest, // disable notifications for the specified user
 	MGTwitterBlockEnableRequest, // enable block for the specified user
 	MGTwitterBlockDisableRequest, // disable block for the specified user
-    MGTwitterImageRequest, // requesting an image
+  MGTwitterImageRequest, // requesting an image
 #if YAJL_AVAILABLE
 	MGTwitterSearchRequest, // performing a search
 	MGTwitterSearchCurrentTrendsRequest, // getting the current trends
@@ -49,15 +49,15 @@ typedef enum _MGTwitterRequestType {
 } MGTwitterRequestType;
 
 typedef enum _MGTwitterResponseType {
-    MGTwitterStatuses           = 0,    // one or more statuses
-    MGTwitterStatus             = 1,    // exactly one status
-    MGTwitterUsers              = 2,    // one or more user's information
-    MGTwitterUser               = 3,    // info for exactly one user
-    MGTwitterDirectMessages     = 4,    // one or more direct messages
-    MGTwitterDirectMessage      = 5,    // exactly one direct message
-    MGTwitterGeneric            = 6,    // a generic response not requiring parsing
+  MGTwitterStatuses           = 0,    // one or more statuses
+  MGTwitterStatus             = 1,    // exactly one status
+  MGTwitterUsers              = 2,    // one or more user's information
+  MGTwitterUser               = 3,    // info for exactly one user
+  MGTwitterDirectMessages     = 4,    // one or more direct messages
+  MGTwitterDirectMessage      = 5,    // exactly one direct message
+  MGTwitterGeneric            = 6,    // a generic response not requiring parsing
 	MGTwitterMiscellaneous		= 8,	// a miscellaneous response of key-value pairs
-    MGTwitterImage              = 7,    // an image
+  MGTwitterImage              = 7,    // an image
 #if YAJL_AVAILABLE
 	MGTwitterSearchResults		= 9,	// search results
 #endif

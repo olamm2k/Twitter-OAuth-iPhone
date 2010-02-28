@@ -29,7 +29,6 @@
 	NSURL		*_accessTokenURL;
 	NSURL		*_authorizeURL;
 
-
 	NSString	*_pin;
 
 @private
@@ -47,15 +46,11 @@
 - (BOOL) isAuthorized;
 
 
-
-
-
-
 - (void) requestAccessToken;
 - (void) requestRequestToken;
 - (void) clearAccessToken;
 
-@property (nonatomic, readwrite, retain)  NSString	*pin;
+@property (nonatomic, readwrite, copy)  NSString	*pin;
 @property (nonatomic, readonly) NSURLRequest *authorizeURLRequest;
 @property (nonatomic, readonly) OAConsumer *consumer;
 
